@@ -6,12 +6,10 @@ import { uploadAndTranslate } from "@/server/common";
 import supportedLanguages from "@/supportedLanguages.json";
 import useLocalStorage from "use-local-storage";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
+import Image from "next/image";
 
 const UploadForm = () => {
-  const [documentIds, setDocumentIds] = useLocalStorage<string[] | undefined>(
-    "documents",
-    []
-  );
+  const [documentIds, setDocumentIds] = useLocalStorage<string[] | undefined>("documents", []);
 
   const [fileName, setFileName] = useState<string>("");
 
@@ -32,16 +30,10 @@ const UploadForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const result = await uploadAndTranslate(
-      formData,
-      (formData.get("file") as File).name
-    );
+    const result = await uploadAndTranslate(formData, (formData.get("file") as File).name);
     console.log(result);
     if (result.success) {
-      setDocumentIds([
-        result.data.operationLocation.split("batches/").pop()!,
-        ...(documentIds ?? []),
-      ]);
+      setDocumentIds([result.data.operationLocation.split("batches/").pop()!, ...(documentIds ?? [])]);
       setFileName(""); // Reset file name after successful upload
     }
   };
@@ -50,40 +42,21 @@ const UploadForm = () => {
     <div className="items-center min-h-screen px-8 py-16 justify-center">
       <div className="w-full max-w-screen-xl mx-auto">
         <div className="p-6 bg-white rounded-xl shadow-md space-y-4">
-          <img
-            src="/Logo.svg"
-            alt="Beschreibung des Bildes"
-            className="mx-auto"
-          />
+          <Image src="/Logo.svg" width={200} height={45} alt="Beschreibung des Bildes" className="mx-auto" />
           <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
             <div
               className="mt-1 flex flex-col items-center justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md cursor-pointer relative"
               onClick={handleDivClick}
             >
               <UploadFileIcon className="h-12 w-12 mx-auto text-gray-400" />
-              <label
-                htmlFor="file-upload"
-                className="mt-2 text-sm text-gray-600 cursor-pointer"
-              >
+              <label htmlFor="file-upload" className="mt-2 text-sm text-gray-600 cursor-pointer">
                 Drag and Drop or select to upload
               </label>
-              <input
-                ref={fileInputRef}
-                id="file-upload"
-                type="file"
-                name="file"
-                required
-                onChange={handleFileChange}
-                style={{ display: "none" }}
-              />
-              {fileName && (
-                <p className="text-sm text-gray-600 mt-2">{fileName}</p>
-              )}
+              <input ref={fileInputRef} id="file-upload" type="file" name="file" required onChange={handleFileChange} style={{ display: "none" }} />
+              {fileName && <p className="text-sm text-gray-600 mt-2">{fileName}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Translate from
-              </label>
+              <label className="block text-sm font-medium text-gray-700">Translate from</label>
               <select
                 name="sourceLanguage"
                 className="block w-full px-3 py-2 bg-white text-gray-700 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -99,9 +72,7 @@ const UploadForm = () => {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
-                into
-              </label>
+              <label className="block text-sm font-medium text-gray-700">into</label>
               <select
                 name="targetLanguage"
                 className="block w-full px-3 py-2 bg-white text-gray-700 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
@@ -127,15 +98,7 @@ const UploadForm = () => {
           </form>
           <ul className="w-full flex flex-col gap-4">
             {documentIds?.map((id) => (
-              <TranslationResult
-                key={id}
-                id={id}
-                remove={() =>
-                  setDocumentIds((documentIds) =>
-                    documentIds?.filter((d) => d !== id)
-                  )
-                }
-              />
+              <TranslationResult key={id} id={id} remove={() => setDocumentIds((documentIds) => documentIds?.filter((d) => d !== id))} />
             ))}
           </ul>
         </div>
