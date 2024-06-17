@@ -24,11 +24,11 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_POLITE_FOREST_006B2E61E }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
           action: "upload"
-          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "/" # App source code path
-
-          ###### End of Repository/Build Configurations ######
+          api_location: "" # Api source code path - optional
+          output_location: "" # Built app content directory - optional
+          app_build_command: "npm run build"
+          api_build_command: "rm -rf ./node_modules/@next/swc-* && rm -rf ./.next/cache"
         env:
           STORAGE_CONTAINER_NAME: saltranslator
           STORAGE_CONTAINER_CONNECTION_STRING: DefaultEndpointsProtocol=https;AccountName=saltranslator;AccountKey=JnlTt74F5nOrEz5bmGS+gKkZ0zdY8Y27M+TBf44l0x+wf5biZxBQrVH46JKkOyzGwYcg3fVAg2vg+AStQ7tiag==;EndpointSuffix=core.windows.net
